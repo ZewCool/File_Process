@@ -1,50 +1,35 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Oct 30 11:21:30 2019
+
 @author: guz4
-
-Count the number of samples by 'sample_num()'.
-Rename every sample folders by 'rename_folders()'.
-Modify the content by 'modify_file_line()'.
-
 """
 
 import os
 
+### Part One: count the number of samples by 'sample_num()'. 
+###           Rename every sample folders with an end of '00x' or '0xx'. 
+###           Modify the random number in every 'RandomFibre' file by looking for the '00x' in the name of folder. 
+
 def sample_num(path):                       
     ''' count the number of sample folders under 'path'. '''   
     names = os.listdir(path)                               # get the names of all files and folders to a list
-    return FileProp(path, names, len(names))                                   # return the number of samples
+    return FileProp(names, len(names))                                   # return the number of samples
     
-def markFolders(startNum, numSample, markOrder=3):
+def markFolders(numSample, markOrder=3, startNum=0):
     ''' the mark value is the order of folder with certain format'''
     mark = str(startNum + numSample).zfill(markOrder)
     return mark
     
-def rename_folders(path, oldName, mark, newName):
+def rename_folders(oldName, mark, newName):
     ''' rename the names of folders and files under 'path' by 'newName'. '''
     os.rename(os.path.join(path,oldName),
-              os.path.join(path,newName + mark))          # rename files and folders under the 'path' folder  
+              os.path.join(path,newName + mark))  
     return NewName(newName)
                   
-def modify_file_line(filePath, modLine, newContent):
-    ''' modify the line 'modeLine' in the file 'filePath' by 'newContent'
-        the modLine should be an int. '''
-    with open(filePath) as f:
-        lines = []
-        for line in f:
-            lines.append(line)       
-        lines[modLine] = newContent
-        f.close() 
-    # replace the old content  by newLine in 'lines'
-    with open(filePath, 'w') as fw:   
-        for newLine in lines:
-            fw.write(newLine)                             # write the new content into 'RandomFibre.fis'
-        fw.close()
-    return
 
 class FileProp:
-    def __init__(self, path, names, sampleNum):
-        self.Path = path
+    def __init__(self, names, sampleNum):
         self.FoNames = names
         self.SaNum = sampleNum
         
@@ -52,27 +37,43 @@ class NewName:
     def __init__(self, newName):
         self.NewName = newName
         
-class ModFileProp:
-    ''' chose the line 'modLine' and the content 'newContent' needs be modified'''
+class ModifyFiles(object):
     def __init__(self, modLine, newContent):
         self.ModLine = modLine
         self.NewCont = newContent
+    
+    def __call__(self, filePath):
+        self.modify_file_line(filePath)
+        return
         
-def mainFunc_batch():
-    startNum = 0
+    def modify_file_line(self, filePath):
+        ''' modify the line 'modeLine' in the file 'filePath' by 'newContent'
+            the modLine should be an int. '''
+        with open(filePath) as f:
+            lines = []
+            for line in f:
+                lines.append(line)       
+            lines[self.ModLine] = self.NewCont
+            f.close() 
+        # replace the old content  by newLine in 'lines'
+        with open(filePath, 'w') as fw:   
+            for newLine in lines:
+                fw.write(newLine)                             # write the new content into 'RandomFibre.fis'
+            fw.close()
+        return
+        
+def mainFunc_part01():
     FP = sample_num(path)                                 # assign the values in the Class 'FileProp' to 'FP'
-    MFP = ModFileProp(1, 'SET random 10%s\n')
+    mfp = ModifyFiles(1, 'SET random 10%s\n')
     for numSample in range(FP.SaNum):
-        mark = markFolders(startNum, numSample)
-        rename_folders(FP.Path, FP.FoNames[numSample], mark, newName)   
+        mark = markFolders(numSample)
+        rename_folders(FP.FoNames[numSample], mark, newName)   
         
-        filePath = path + '\\%s%s\\%s' % (newName, mark, fileNam)
-        modLine = MFP.ModLine
-        newContent = MFP.NewCont % mark
-        modify_file_line(filePath, modLine, newContent)
+        filePath = path + '\\%s%s\\%s' % (newName, mark, fileName)
+        mfp(filePath)
 
 if __name__ == '__main__':
-    path = 'Fill file directory here!'
-    newName = 'Type new folders names here'
-    fileNam = 'Type the name of the file needs to be modified'
-    mainFunc_batch()
+    path = 'C:\\PhD_ValveSpringDynamics\\Others\\DingML\\SBoard_OneFibSamples'
+    newName = 'Sample'
+    fileName = 'RandomFibre.fis'
+    mainFunc_part01()
