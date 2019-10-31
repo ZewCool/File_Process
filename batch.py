@@ -25,19 +25,23 @@ def rename_folders(oldName, mark, newName):
     ''' rename the names of folders and files under 'path' by 'newName'. '''
     os.rename(os.path.join(path,oldName),
               os.path.join(path,newName + mark))  
-    return NewName(newName)
+    return 
                   
 
 class FileProp:
+    ''' the file properties of the folders. '''
     def __init__(self, names, sampleNum):
         self.FoNames = names
         self.SaNum = sampleNum
         
 class NewName:
+    ''' the new name of the file. '''
     def __init__(self, newName):
         self.NewName = newName
         
 class ModifyFiles(object):
+    ''' modify the line 'modeLine' in the file 'filePath' by 'newContent'
+            the modLine should be an int. '''
     def __init__(self, modLine, newContent):
         self.ModLine = modLine
         self.NewCont = newContent
@@ -47,8 +51,6 @@ class ModifyFiles(object):
         return
         
     def modify_file_line(self, filePath):
-        ''' modify the line 'modeLine' in the file 'filePath' by 'newContent'
-            the modLine should be an int. '''
         with open(filePath) as f:
             lines = []
             for line in f:
@@ -63,12 +65,12 @@ class ModifyFiles(object):
         return
         
 def mainFunc_part01():
-    FP = sample_num(path)                                 # assign the values in the Class 'FileProp' to 'FP'
+    ''' rename the folders and modify the content of the files. '''
+    fileProp = sample_num(path)                                 # assign the values in the Class 'FileProp' to 'FP'
     mfp = ModifyFiles(1, 'SET random 10%s\n')
-    for numSample in range(FP.SaNum):
+    for numSample in range(fileProp.SaNum):
         mark = markFolders(numSample)
-        rename_folders(FP.FoNames[numSample], mark, newName)   
-        
+        rename_folders(fileProp.FoNames[numSample], mark, newName)       
         filePath = path + '\\%s%s\\%s' % (newName, mark, fileName)
         mfp(filePath)
 
