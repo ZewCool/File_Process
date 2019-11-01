@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Nov  1 10:53:16 2019
-
 @author: guz4
 """
 
