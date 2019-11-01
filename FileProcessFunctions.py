@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct 31 13:50:44 2019
-
 @author: guz4
 """
-
-### functions used for Part 01
 
 import os
 
