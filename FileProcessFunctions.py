@@ -16,6 +16,15 @@ def rename_folders(path, oldName, newName, mark):
               os.path.join(path,newName + str(mark)))  
     return 
 
+def map_str_to_float(oldListStr):                                   ## function to alter a string list to a float list 
+    newListFloat = []
+    for eachEle in oldListStr:                                       # currently support only 2 layers
+        eachEleFloat = list(map(float, eachEle))
+        newListFloat.append(eachEleFloat)
+    return newListFloat
+
+### classes below###
+    
 class FileName(object):
     def __init__(self, names):
         self.FoNames = names
