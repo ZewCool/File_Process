@@ -55,11 +55,16 @@ def main_func(stepNum=3, startNum=0, digitNum=3):
             for line, cont in zip(linNums, newContent):
                 fileHex.modify_file_line(line, cont)
         
-if __name__ == '__main__':     
+if __name__ == '__main__':   
+    # parameters defined outside functions
     path = 'C:\\PhD_ValveSpringDynamics\\Others\\DingML\\SBoardSamples'
     newName = 'Sample'
     fileNames = ['RandomFibre.fis','FibreCentre.log', 'Hex1.fis']
-    main_func(2)
+    
+    # main function 
+    # stepNum == 1 when we want to change the names of sub-folders 
+    # stepNum == 2 when we want to change the content in several files
+    main_func(stepNum=2)
 
                
                
