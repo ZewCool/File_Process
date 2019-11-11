@@ -1,13 +1,26 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 11 15:05:08 2019
 
-@author: guz4
-"""
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn import metrics
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix
+from sklearn.manifold import TSNE
+
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import Reshape
+from keras.layers import Flatten
+from keras.layers import GlobalAveragePooling1D
+from keras.layers import Dropout
+from keras.layers import GaussianNoise
+from keras import regularizers 
+import matplotlib.pyplot as plt
+from collections import Counter
+from imblearn.over_sampling import SMOTE
 
 def namestr(obj, namespace):
     ''' retreive the name of a variable '''
@@ -53,14 +66,24 @@ def concat_everyUnderBoard(trainData):
 
 if __name__ == '__main__':
     allData = concat_pds(marx, mary, marBW, Class)
-    trainData = allData[0:500]
-    preData = allData[500:510]
+    trainData = allData[0:491]
+    preData = allData[491:500]
     
     trDaUnd = concat_everyUnderBoard(trainData)
     preDaUnd = concat_everyUnderBoard(preData)
     
     trainFea = np.array(trDaUnd.iloc[:,trDaUnd.columns != 'Class'])
     trainRes = np.array(trDaUnd.iloc[:,trDaUnd.columns == 'Class'])
+    count_classes=pd.value_counts(trDaUnd['Class'],sort=True).sort_index()
+    count_classes.value_counts()
+    count_classes.plot(kind='bar')
+    plt.show()
+    
+    smo = SMOTE(ratio={1:400000},random_state=42)
+    #smo = SMOTE(ratio={1:30500},kind='borderline1',random_state=42)
+    #smo = SMOTE(ratio={1:40000},kind='borderline2',random_state=42)
+    X_smo, Y_smo = smo.fit_sample(trainFea, trainRes)
+    print(Counter(Y_smo))
     preFea = np.array(preDaUnd.iloc[:,preDaUnd.columns != 'Class'])
     preCra = np.array(preDaUnd.iloc[:,preDaUnd.columns == 'Class'])    
 
@@ -133,7 +156,7 @@ if __name__ == '__main__':
     #创建一个实例history
     history = LossHistory()
     # Fit the model‼
-    model.fit(trainFea, trainRes, verbose=1, epochs = 50, batch_size = 360, 
+    model.fit(X_smo, Y_smo, verbose=1, epochs = 200, batch_size = 760, 
               validation_data = (preFea, preCra),
               callbacks = [history])
 
@@ -156,6 +179,6 @@ if __name__ == '__main__':
         plt.figure(figsize = (10, 10))
         plt.scatter(oriCra['marx'], oriCra['mary'], s=150)
         plt.scatter(oriMar['marx'], oriMar['mary'], s=150, c = 'grey')
-        plt.scatter(preCra['marx'], preCra['mary'], s=20, c = 'r')
+        plt.scatter(preCra['marx'], preCra['mary'], s=20, c = 'blue')
        
         plt.show()
