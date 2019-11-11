@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """
+Created on Fri Nov  1 10:53:16 2019
+
 @author: guz4
 """
 
@@ -42,6 +44,13 @@ def file_path(num, mark):
     filePath = path + '\\%s%s\\%s' % (newName, mark, fileName)
     return filePath
 
+def unit_meterTomm(mar):
+    mar_new = []
+    for mar_board in mar:
+        mar_board = mar_board*1e6
+        mar_new.append(mar_board)
+    return mar_new
+
 def main_func(stepNum=3, startNum=0, digitNum=3):  
     '''
     example main function which rename multiple folders and 
@@ -78,13 +87,14 @@ def main_func(stepNum=3, startNum=0, digitNum=3):
                 fileHex.modify_file_line(line, cont)
     
     if stepNum == 3:
-        marx, mary, crackId, fibCx, fibCy = [], [], [], [], []
+        marx, mary, marBW, crackId, fibCx, fibCy = [], [], [], [], [], []
+        
         for oldName in FPF.sample_num(path).FoNames:
             startNum += 1
             mark = str(startNum).zfill(digitNum)
             
             filePathOut = file_path(3, mark)
-            matInfoStr = matrix_result(filePathOut, 'matrix_and_fibre start\n', 'matrix_and_fibre end\n', blackBall=False)
+            matInfoStr = matrix_result(filePathOut, 'matrix_and_fibre start\n', 'matrix_and_fibre end\n', blackBall=True)
             matCidStr = crackId_result(filePathOut, 'cracksid start\n', 'cracksid end\n', matInfoStr)
             filePathFib = file_path(1, mark)
             fibXStr, fibYStr, fibRStr = fibre_xyr(filePathFib, 'FibreCentreStart\n', 'FibreCentreEnd\n')
@@ -99,7 +109,8 @@ def main_func(stepNum=3, startNum=0, digitNum=3):
             fibXArr, fibYArr = np.array(fibXFloat), np.array(fibYFloat)
             
             # achieve datas on each board
-            marXEachB, marYEachB, crackIdEachB = matInfoArr[:, 1], matInfoArr[:, 2], matCidArr[:]
+            marXEachB, marYEachB, marBWEachB, crackIdEachB = matInfoArr[:, 1], matInfoArr[:, 2], matInfoArr[:, 3], matCidArr[:]
+            
             fibCxEachB, fibCyEachB = fibXArr[:], fibYArr[:]
             
             # list the datas of all boards
@@ -109,7 +120,9 @@ def main_func(stepNum=3, startNum=0, digitNum=3):
             fibCx.append(fibCxEachB)
             fibCy.append(fibCyEachB)
             
-        return marx, mary, crackId, fibCx, fibCy
+            marBW.append(marBWEachB)
+            
+        return marx, mary, marBW, crackId, fibCx, fibCy
                    
         
 if __name__ == '__main__':   
@@ -125,5 +138,18 @@ if __name__ == '__main__':
     # stepNum == 1 when we want to change the names of sub-folders 
     # stepNum == 2 when we want to change the content in several files
     # stepNum == 3 can achieve the matrix and fibre data
+    sampleNum = FPF.sample_num(path).SaNum
+    marx, mary, marBW, crackId, fibCx, fibCy= main_func(stepNum=3)
     
-    marx, mary, crackId, fibCx, fibCy = main_func(stepNum=3)
+    def crackOne(crackId):
+        Class = []
+        for i in crackId:
+            c = np.array([])
+            for j in i:
+                c = np.append(c, j)
+            Class.append(c)
+        return Class
+    
+    Class = crackOne(crackId)
+    marx = unit_meterTomm(marx)
+    mary = unit_meterTomm(mary)
