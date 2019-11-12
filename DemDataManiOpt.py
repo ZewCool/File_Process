@@ -59,8 +59,12 @@ def numst_min_dist(numst, marx, mary, fibCx, fibCy):
         numstDist1 = []
         numstAngle1 = []
         for matDA in matDAa:
-            numstDist1.append(matDA[numst][0])
-            numstAngle1.append(matDA[numst][1])
+            try:
+                numstDist1.append(matDA[numst][0])
+                numstAngle1.append(matDA[numst][1])
+            except IndexError:
+                numstDist1.append(float(substitute))
+                numstAngle1.append(float(substitute))
         numstDist.append(numstDist1)
         numstAngle.append(numstAngle1)
     return numstDist, numstAngle
@@ -75,5 +79,5 @@ def min_da_all(numAll, marx, mary, fibCx, fibCy):
     return minDa, minAng
         
 if __name__ == '__main__':
-   minDist, minAng = min_da_all(26, marx, mary, fibCx, fibCy)
-   
+    substitute = 'nan'
+    minDist, minAng = min_da_all(9, marx, mary, fibCx, fibCy)
