@@ -79,5 +79,5 @@ def min_da_all(numAll, marx, mary, fibCx, fibCy):
     return minDa, minAng
         
 if __name__ == '__main__':
-    substitute = 'nan'
-    minDist, minAng = min_da_all(9, marx, mary, fibCx, fibCy)
+    substitute = 10000
+    minDist, minAng = min_da_all(32, marx, mary, fibCx, fibCy)

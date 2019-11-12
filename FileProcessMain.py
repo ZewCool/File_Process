@@ -127,8 +127,8 @@ def main_func(stepNum=3, startNum=0, digitNum=3):
         
 if __name__ == '__main__':   
     # parameters defined outside functions
-    path = 'C:\\PhD_ValveSpringDynamics\\Others\\DingML\\SBoardSamples'
-    newName = 'Sample'
+    path = 'D:\\1010NewSample1'
+    newName = 'New1010Sample'
     fileNames = ['RandomFibre.fis',
                  'FibreCentre.log', 
                  'Hex1.fis', 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     # stepNum == 2 when we want to change the content in several files
     # stepNum == 3 can achieve the matrix and fibre data
     sampleNum = FPF.sample_num(path).SaNum
-    marx, mary, marBW, crackId, fibCx, fibCy= main_func(stepNum=3)
+    marx, mary, marBW, crackId, fibCx, fibCy= main_func(stepNum=3, startNum=200)
     
     def crackOne(crackId):
         Class = []
